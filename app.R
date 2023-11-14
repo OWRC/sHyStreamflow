@@ -1,18 +1,18 @@
 ##########################################################
-##################### sHydrology ######################### 
+#################### sHyStreamflow ####################### 
 #### A Shiny-Leaflet interface to the YPDT database.  ####
 ##########################################################
 # Hydrological analysis tools
 #
 # By M.Marchildon
 # v.1.8
-# Oct, 2023
+# Nov, 2023
 ##########################################################
 
 
 source("pkg/packages.R", local = TRUE)
 
-sta.id.test <- 149203 # NULL # 149203 # 731100016 # '149343' # '02EC009' # '149130' # 149118 # 2147456340 # 
+sta.id.test <- NULL # 731400010 # NULL # 731400011 # 149203 # 149203 # 731100016 # '149343' # '02EC009' # '149130' # 149118 # 2147456340 # 
 
 
 shinyApp(
@@ -36,9 +36,9 @@ shinyApp(
       div(
         id = "app-content",
         list(tags$head(HTML('<link rel="icon", href="favicon.png",type="image/png" />'))),
-        div(style="padding: 1px 0px; height: 0px", titlePanel(title="", windowTitle="sHydrology")), # height: 0px
+        div(style="padding: 1px 0px; height: 0px", titlePanel(title="", windowTitle="sHyStreamflow")), # height: 0px
         navbarPage(
-          title=div(img(src="ORMGP_logo_no_text_short.png", height=11), "sHydrology v1.8"),
+          title=div(img(src="ORMGP_logo_no_text_short.png", height=11), "sHyStreamflow v1.8"),
           source(file.path("ui", "hydrograph.R"), local = TRUE)$value,
           source(file.path("ui", "trends.R"), local = TRUE)$value,
           source(file.path("ui", "stats.R"), local = TRUE)$value,

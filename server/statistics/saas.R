@@ -8,6 +8,9 @@
 output$rng.saas <- renderDygraph({
   if (!is.null(sta$hyd)){
     if (!sta$BFbuilt) separateHydrograph()
+    if (is.null(sta$hyd$qtyp))  sta$hyd <- parse_hydrograph(sta$hyd,sta$k)
+    if ( is.null(sta$hyd$evnt) ) sta$hyd <- discretize_hydrograph(sta$hyd,sta$carea,sta$k)
+    
     qxts <- xts(sta$hyd[, c('Flow','BF.med')], order.by = sta$hyd$Date)
     colnames(qxts) <- c('Discharge',"Baseflow")
     dygraph(qxts) %>%

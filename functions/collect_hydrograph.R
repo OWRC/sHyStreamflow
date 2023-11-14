@@ -12,7 +12,8 @@ collect_hydrograph <- function(LOC_ID) {
     # info <- info.main # for testing
     sta$info <- info
     sta$carea <- info.main$SW_DRAINAGE_AREA_KM2
-    if (length(sta$carea)==0 || sta$carea<=0) sta$carea=NULL
+    print(sta$carea)
+    if (is.na(sta$carea) || length(sta$carea)==0 || sta$carea<=0) sta$carea=NULL
     sta$iid <- info.main$INT_ID
     sta$name <- info.main$LOC_NAME
     sta$name2 <- info.main$LOC_NAME_ALT1

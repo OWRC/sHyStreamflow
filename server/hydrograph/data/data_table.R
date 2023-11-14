@@ -42,7 +42,8 @@ observeEvent(input$tabCmplt, {
   if (!sta$BFbuilt) separateHydrograph()
   if (is.null(sta$hyd$qtyp)) {
     sta$hyd <- parse_hydrograph(sta$hyd,sta$k)
-    if(!is.null(sta$carea) && is.null(sta$hyd$evnt)) sta$hyd <- discretize_hydrograph(sta$hyd,sta$carea,sta$k)
+    # if(!is.null(sta$carea) && is.null(sta$hyd$evnt)) sta$hyd <- discretize_hydrograph(sta$hyd,sta$carea,sta$k)
+    if ( is.null(sta$hyd$evnt) ) sta$hyd <- discretize_hydrograph(sta$hyd,sta$carea,sta$k)
   }
 })
 

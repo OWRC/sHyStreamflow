@@ -67,7 +67,7 @@ output$saas.mmbf <- renderPlot({
       ggplot() +
         theme_bw() +
         geom_boxplot(aes(x = reorder(mnt, montho(Date)), y = BF.med), size = 1) + #, outlier.shape = NA)
-        labs(title = sta$label, y="Monthly median baseflow magnitude (m³/s)")
+        labs(title = sta$label, y="Monthly median baseflow magnitude (m³/s)",x=NULL)
   }
 })
 

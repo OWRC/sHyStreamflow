@@ -8,9 +8,9 @@ points <- eventReactive(input$recalc, {
 output$leaflet <- renderLeaflet({
   if (!is.null(sta)) {
     leaflet() %>%
-      addProviderTiles(providers$Stamen.TonerLite,
-                       options = providerTileOptions(noWrap = TRUE)
-      ) %>%
-      addMarkers(data = points())    
+      addTiles() %>%
+      # addProviderTiles(providers$Stamen.TonerLite,options = providerTileOptions(noWrap = TRUE)) %>%
+      addMarkers(data = points()) %>%
+      addGeoJSON(sta$geojson)
   }
 })

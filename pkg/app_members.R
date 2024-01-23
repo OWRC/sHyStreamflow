@@ -21,7 +21,7 @@ output$link.shydrograph <- renderUI({ shiny::HTML(sta$lnk)})
 ##############################################################
 
 sta <- reactiveValues(lid=NULL, iid=NULL, name=NULL, name2=NULL, lnk='',
-                      carea=NULL, k=NULL, hyd=NULL,
+                      carea=NULL, geojson=NULL, k=NULL, hyd=NULL,
                       DTb=NULL, DTe=NULL, label=NULL, info.html=NULL, 
                       LONG=NULL, LAT=NULL, 
                       info=NULL, BFbuilt=FALSE, HPbuilt=FALSE)

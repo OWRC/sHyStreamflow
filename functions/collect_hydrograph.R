@@ -6,19 +6,24 @@ collect_hydrograph <- function(LOC_ID) {
   isolate(withProgress(message = 'collecting station info..', value = 0.1, {
     sta$lid <- LOC_ID
     info <- qStaInfo(ldbc, sta$lid)
+    print(info)
     
     if (is.null(info)) showNotification(paste0("Error LOC_ID: ",sta$lid," not found."))
     info.main <- info[info$LOC_ID==LOC_ID,] ##################  mm: currently LOC_ID picked, should we default to master loc??????
     # info <- info.main # for testing
     sta$info <- info
     sta$carea <- info.main$SW_DRAINAGE_AREA_KM2
-    print(sta$carea)
-    if (is.na(sta$carea) || length(sta$carea)==0 || sta$carea<=0) sta$carea=NULL
     sta$iid <- info.main$INT_ID
     sta$name <- info.main$LOC_NAME
     sta$name2 <- info.main$LOC_NAME_ALT1
     sta$LONG <- info.main$LONG
     sta$LAT <- info.main$LAT
+    sta$geojson <- owrc.carea(sta$LAT,sta$LONG)
+    if (is.na(sta$carea) || length(sta$carea)==0 || sta$carea<=0) {
+      gj <- fromJSON(sta$geojson)
+      sta$carea <- gj$features$properties$area
+    }
+    if (is.na(sta$carea) || length(sta$carea)==0 || sta$carea<=0) sta$carea=NULL
     sta$label <- paste0(sta$name,': ',sta$name2)
     if (nrow(info)>1) {
       showNotification("aggregating co-located stations")

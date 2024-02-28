@@ -2,12 +2,12 @@
 #### data tables
 output$tabSta <- DT::renderDataTable({
   if (!is.null(sta$info)){
-    drop <- c("LOC_ID","INT_ID")
-    print(sta$info)
+    drop <- c("LOC_ID","INT_ID","LOC_COORD_EASTING","LOC_COORD_NORTHING","LOC_MASTER_LOC_ID","DA2023")
     df <- sta$info[,!(names(sta$info) %in% drop)] %>% 
-      dplyr::rename(StationName=LOC_NAME, LongName=LOC_NAME_ALT1, latitude=LAT, longitude=LONG, DrainageArea=SW_DRAINAGE_AREA_KM2, nData=CNT, PeriodBegin=YRb, PeriodEnd=YRe, Quality=QUAL)
+      mutate(DTb=year(DTb), DTe=year(DTe)) %>%
+      dplyr::rename(StationName=LOC_NAME, LongName=LOC_NAME_ALT1, latitude=LAT, longitude=LONG, DrainageArea=SW_DRAINAGE_AREA_KM2, nData=CNT, PeriodBegin=DTb, PeriodEnd=DTe)
     DT::datatable(df) %>%
-      formatPercentage('Quality', 0) %>%
+      # formatPercentage('Quality', 0) %>%
       formatRound(c('latitude', 'longitude'), 3) %>%
       formatRound('DrainageArea',1)
   }
@@ -27,7 +27,10 @@ output$tabhyd <- DT::renderDataTable({
       # } else {
       #   df
       # }
-      return(df)
+      # return(df)
+      DT::datatable(df) %>%
+        formatRound('Flow',3) %>%
+        formatRound(c('Tx', 'Tn', 'Rf', 'Sf', 'Sm', 'Pa'), 1)
     }
   }, 
   options = list(scrollY='100%', scrollX=TRUE,

@@ -3,8 +3,8 @@ old/
 test/
 *.sqlite3
 *.Rproj
-owrc-api.R
-YCDB_API_query.R
+# owrc-api.R
+# YCDB_API_query.R
 YCDB_query.R
 test.R
 

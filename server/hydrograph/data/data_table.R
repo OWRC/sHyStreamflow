@@ -30,7 +30,7 @@ output$tabhyd <- DT::renderDataTable({
       # return(df)
       DT::datatable(df) %>%
         formatRound('Flow',3) %>%
-        formatRound(c('Tx', 'Tn', 'Rf', 'Sf', 'Sm', 'Pa'), 1)
+        formatRound(c('Tx', 'Tn', 'Rf', 'Sf', 'Sm'), 1)
     }
   }, 
   options = list(scrollY='100%', scrollX=TRUE,

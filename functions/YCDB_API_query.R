@@ -18,14 +18,14 @@ source("functions/owrc-api.R", local = TRUE)
 ## API addresses
 ###########################################################################################
 ldbc <- 'http://data.oakridgeswater.ca:8080/locsw' 
-idbc <- 'http://data.oakridgeswater.ca:8080/intgen/5/'
+idbc <- 'http://data.oakridgeswater.ca:8080/intgen/2/'
 
 
 ###########################################################################################
 ## collect locations
 ###########################################################################################
 qStaLoc <- function(API){
-  # print(API)
+  print(API)
   tblSta <- fromJSON(API)
   # colnames(tblSta)[2] <- "sID"    # INT_ID (IID)
   # colnames(tblSta)[3] <- "sName"  # LOC_NAME (NAM1)
@@ -67,7 +67,9 @@ qTemporal <- function(API,INT_ID){
     # aggregate stations
     qAll <- INT_ID %>% map_df(~fromJSON(paste0(API, .), flatten = TRUE))
   } else {
-    qAll <- fromJSON(paste0(API,INT_ID)) 
+    url <- paste0(API,INT_ID)
+    print(url)
+    qAll <- fromJSON(url) 
   }
   qFlow <- qAll[qAll$RDNC == 1001,]
   Date <- zoo::as.Date(qFlow$Date)

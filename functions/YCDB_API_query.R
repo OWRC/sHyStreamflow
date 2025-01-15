@@ -125,5 +125,5 @@ get.supplimental <- function(info) {
 
 
 observe({
-  sta$lnk <- paste0('<a href="https://owrc.shinyapps.io/shydrograph/?t=5&i=',sta$iid,'" target="_blank" rel="noopener noreferrer">open in general timeseries analysis tool</a>')
+  sta$lnk <- paste0('<a href="https://owrc.shinyapps.io/shydrograph/?t=2&i=',sta$iid,'" target="_blank" rel="noopener noreferrer">open in general timeseries analysis tool</a>')
 })

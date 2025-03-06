@@ -1,3 +1,4 @@
+source(file.path("server/hydrograph", "info_main.R"), local = TRUE)$value
 source(file.path("server/hydrograph", "discharge.R"), local = TRUE)$value
 source(file.path("server/hydrograph", "discharge_gghydgrph.R"), local = TRUE)$value
 source(file.path("server/hydrograph", "discharge_leaflet.R"), local = TRUE)$value

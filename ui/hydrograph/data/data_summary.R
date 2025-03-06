@@ -1,6 +1,8 @@
 
 fluidPage(
-  titlePanel("Aggregated summary"),
+  # titlePanel("Data summary"),
+  headerPanel('Data summary'),
+  htmlOutput("hdr.qual"), br(),
   
   sidebarLayout(
     sidebarPanel(
@@ -24,9 +26,9 @@ fluidPage(
                   ),
                   selected = "All Year"),
       
-      sliderInput("dat.sum.rng", 
-                  label = "Range of interest:",
-                  min = 0, max = 100, value = c(0, 100)),
+      # sliderInput("dat.sum.rng", 
+      #             label = "Range of interest:",
+      #             min = 0, max = 100, value = c(0, 100)),
       width=2
       ),
     

@@ -6,7 +6,7 @@
 baseflow_range <- function(hyd, cArea_km2=NULL, k=NULL, p=NULL, updateProgress=NULL){
   Q <- hyd[,2]
   
-  Qcoll <- data.frame(Date=hyd[,1],Flow=Q,Flag=hyd[,3],BF.min=rep(NA,nrow(hyd)),BF.med=rep(NA,nrow(hyd)),BF.max=rep(NA,nrow(hyd)))
+  Qcoll <- data.frame(Date=hyd[,1],Flow=Q,Flag=hyd[,3],BFI=rep(NA,nrow(hyd)),BF.min=rep(NA,nrow(hyd)),BF.med=rep(NA,nrow(hyd)),BF.max=rep(NA,nrow(hyd)))
   if (is.null(p)){p <- list(LHa=0.925, LHp=3, BFIx=0.8, JHC=0.3)} # defaults
   
   if (is.function(updateProgress)){updateProgress(detail = 'computing Lyne-Hollick..')}
@@ -39,6 +39,8 @@ baseflow_range <- function(hyd, cArea_km2=NULL, k=NULL, p=NULL, updateProgress=N
   Qcoll$BF.min <- apply(Qcoll[,7:20], 1, function(x) if(all(is.na(x))){NA}else{min(x, na.rm = TRUE)})
   Qcoll$BF.med <- apply(Qcoll[,7:20], 1, function(x) if(all(is.na(x))){NA}else{median(x, na.rm = TRUE)})
   Qcoll$BF.max <- apply(Qcoll[,7:20], 1, function(x) if(all(is.na(x))){NA}else{max(x, na.rm = TRUE)})
+  
+  Qcoll$BFI <- Qcoll$BF.med/Q
   
   return(Qcoll)
 }

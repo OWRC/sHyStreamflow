@@ -24,7 +24,7 @@ output$saas.cff <- renderPlot({
       group_by(mnt) %>%
       summarise(nevnt=n()) %>%
       mutate(mnt=month.abb[mnt]) %>%
-      mutate(mnt=factor(mnt,levels=month.abb)) %>%
+      mutate(mnt=factor(mnt,levels=montha)) %>%
       ggplot(aes(mnt,nevnt)) + theme_bw() + geom_bar(stat='identity') + scale_x_discrete(drop=FALSE) + labs(x="timing (month)",y="count")
   
     grid.arrange(p1, p2, p3, nrow = 1, top=sta$label)

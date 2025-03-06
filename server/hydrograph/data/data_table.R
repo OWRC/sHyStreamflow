@@ -2,13 +2,14 @@
 #### data tables
 output$tabSta <- DT::renderDataTable({
   if (!is.null(sta$info)){
-    drop <- c("LOC_ID","INT_ID","LOC_COORD_EASTING","LOC_COORD_NORTHING","LOC_MASTER_LOC_ID","DA2023")
+    drop <- c("LOC_ID","INT_ID","LOC_COORD_EASTING","LOC_COORD_NORTHING","LOC_MASTER_LOC_ID","DA2023","cellID")
     df <- sta$info[,!(names(sta$info) %in% drop)] %>% 
       mutate(DTb=year(DTb), DTe=year(DTe)) %>%
-      dplyr::rename(StationName=LOC_NAME, LongName=LOC_NAME_ALT1, latitude=LAT, longitude=LONG, DrainageArea=SW_DRAINAGE_AREA_KM2, nData=CNT, PeriodBegin=DTb, PeriodEnd=DTe)
-    DT::datatable(df) %>%
+      dplyr::rename(StationID=LOC_NAME, StationName=LOC_NAME_ALT1, Latitude=LAT, Longitude=LONG, Elevation=GRND_ELEV, DrainageArea=SW_DRAINAGE_AREA_KM2, nData=CNT, YearBegin=DTb, YearEnd=DTe) %>% 
+      relocate(any_of(c("StationID", "StationName", "Latitude", "Longitude", "Elevation", "DrainageArea", "YearBegin", "YearEnd", "nData")))
+    DT::datatable(df, rownames = FALSE) %>%
       # formatPercentage('Quality', 0) %>%
-      formatRound(c('latitude', 'longitude'), 3) %>%
+      formatRound(c('Latitude', 'Longitude','Elevation','p16','p84'), 3) %>%
       formatRound('DrainageArea',1)
   }
 })
@@ -57,5 +58,12 @@ output$tabCsv <- downloadHandler(
       dat.out <- sta$hyd[sta$hyd$Date >= input$tabRng[1] & sta$hyd$Date <= input$tabRng[2],]
       write.csv(dat.out[!is.na(dat.out$Flow),], file, row.names = FALSE)
     }
+  }
+)
+
+output$btnCarea <- downloadHandler(
+  filename <- function() { paste0(sta$name, '.geojson') },
+  content <- function(file) {
+    if (!is.null(sta$geojson)) write(sta$geojson, file)
   }
 )

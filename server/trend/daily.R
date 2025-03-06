@@ -21,7 +21,8 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
   dQn <- aggregate(dQ ~ doy, hyd, min)[,2]
   dQx <- aggregate(dQ ~ doy, hyd, max)[,2]
   dBF <- aggregate(dBF ~ doy, hyd, mean)[,2]
-  df <- data.frame(doy=seq(1,366),dQ,dQn,dQx,dBF)
+  df <- data.frame(doy=seq(1,366),dQ,dQn,dQx,dBF) %>%
+    mutate(doy = ifelse(doy>365-92,doy-365,doy))
   df$doy <- as.Date(df$doy - 1, origin = "2008-01-01")
   
   if (minmaxmean) {

@@ -13,7 +13,7 @@ navbarMenu("Hydrograph",
  tabPanel("data quality (counts)",
          source(file.path("ui/hydrograph/data", "data_qual.R"), local = TRUE)$value
  ),  
- tabPanel("aggregated data summary",
+ tabPanel("data summary",
          source(file.path("ui/hydrograph/data", "data_summary.R"), local = TRUE)$value
  ),
  tabPanel("Download data",

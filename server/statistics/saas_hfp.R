@@ -21,13 +21,13 @@ output$saas.hfp <- renderPlot({
       filter(new==1, pkflw<qbf)
     
     p1 <- evnts %>%
-      mutate(yr=year(Date), mnt=month(Date)) %>%
+      mutate(yr=year(Date), mnt=month(Date)) %>% #mnt=factor(month(Date),levels=montha)) %>%
       group_by(yr,mnt) %>%
       summarise(freq=n()) %>% 
       ungroup() %>%
       dplyr::select(-yr) %>%
       mutate(mnt=month.abb[mnt]) %>%
-      mutate(mnt=factor(mnt,levels=month.abb)) %>%
+      mutate(mnt=factor(mnt,levels=montha)) %>%
       group_by(mnt) %>%
       summarise(med.f=median(freq, na.rm=TRUE)) %>%
       ggplot(aes(mnt,med.f)) + 
@@ -41,7 +41,7 @@ output$saas.hfp <- renderPlot({
       group_by(mnt) %>%
       summarise(med.d=median(dur, na.rm=TRUE)) %>%
       mutate(mnt=month.abb[mnt]) %>%
-      mutate(mnt=factor(mnt,levels=month.abb)) %>%
+      mutate(mnt=factor(mnt,levels=montha)) %>%
       ggplot(aes(mnt,med.d)) + 
         theme_bw() +
         geom_bar(stat = 'identity') +

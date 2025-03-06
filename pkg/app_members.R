@@ -11,6 +11,7 @@ output$hdr3 <- renderUI({shiny::HTML(paste0("<h2>&emsp;",sta$label,"</h2>"))})
 output$hdr.iha <- renderUI({shiny::HTML(paste0("<h4>",sta$label," ",iha.dates(),"</h4>"))})
 
 output$hdr.qual <- renderUI({shiny::HTML(paste0("<h3>&emsp;",sta$label,"</h3>"))})
+output$hdr.summ <- renderUI({shiny::HTML(paste0("<h3>&emsp;",sta$label,"</h3>"))})
 
 # output$link.shydrograph <- renderUI({ shiny::HTML(paste0('<a href="',apiT5,sta$iid,'" target="_blank" rel="noopener noreferrer">open in general timeseries analysis tool</a>'))})
 output$link.shydrograph <- renderUI({ shiny::HTML(sta$lnk)})

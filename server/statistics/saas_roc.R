@@ -24,7 +24,7 @@ output$saas.roc <- renderPlot({
       group_by(mnt) %>%
       summarise(rising=median(rise, na.rm=TRUE),falling=median(fall, na.rm=TRUE)) %>%
       mutate(mnt=month.abb[mnt]) %>%
-      mutate(mnt=factor(mnt,levels=month.abb)) %>%
+      mutate(mnt=factor(mnt,levels=montha)) %>%
       gather(key = "Limb", value = "val", -mnt) %>%
       ggplot(aes(mnt,val)) + 
         theme_bw() + 

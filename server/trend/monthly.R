@@ -2,7 +2,7 @@
 
 
 monthly_summary_box <- function(hyd, carea, title, DTrng=NULL) {
-  hyd <- hyd %>% mutate(Date=as.Date(Date), mnt=factor(strftime(Date, format="%b"),levels=c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'))) 
+  hyd <- hyd %>% mutate(Date=as.Date(Date), mnt=factor(strftime(Date, format="%b"),levels=montha)) #c('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'))) 
   
   if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
 

@@ -59,7 +59,8 @@ output$rng.se <- renderDygraph({
                                    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                                    return monthNames[d.getMonth()];
                                    }'),
-             valueFormatter = 'function(ms) { return moment(ms).format("DD MMM"); }') 
+             valueFormatter = 'function(ms) { return moment(ms).format("DD MMM"); }') %>%
+      dyAxis('y', label=dylabcms)
       # %>% dyLegend(show = "never")
 
     # nice effect here, but screws with everything else

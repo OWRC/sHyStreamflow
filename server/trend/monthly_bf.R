@@ -6,7 +6,7 @@ baseflow_boxplot <- function(hyd,carea,k=NULL,title=NULL, DTrng=NULL){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   hyd$mnt <- format(hyd$Date, "%b")
   hyd$mnt <- as.factor(hyd$mnt)
-  unit <- 'm?/s'
+  unit <- 'm3/s'
   if(!is.null(carea)){
     hyd$BF.med <- hyd$BF.med * 2592/carea # mm/30 days
     unit <- 'mm' #'mm/month'
@@ -48,30 +48,46 @@ baseflow_BFI <- function(hyd,carea,k=NULL,title=NULL, DTrng=NULL){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
   
-  hyd$mnt <- format(hyd$Date, "%b")
-  hyd$mnt <- as.factor(hyd$mnt)
-  hyd$BFI <- hyd$BF.med/hyd$Flow
+  # hyd$mnt <- format(hyd$Date, "%b")
+  # hyd$mnt <- as.factor(hyd$mnt)
+  # hyd$BFI <- hyd$BF.med/hyd$Flow
   
-  # BFI.sum <- ddply(hyd, .(reorder(mnt, montho(hyd$Date))), summarize, 
-  #                  mean = round(mean(BFI, na.rm = TRUE), 2), 
-  #                  sd = round(sd(BFI, na.rm = TRUE), 2), 
+  # # BFI.sum <- ddply(hyd, .(reorder(mnt, montho(hyd$Date))), summarize,
+  # #                  mean = round(mean(BFI, na.rm = TRUE), 2),
+  # #                  sd = round(sd(BFI, na.rm = TRUE), 2),
+  # #                  n = length(Flow))
+  # BFI.sum <- ddply(hyd, .(reorder(mnt, montho(hyd$Date))), summarize,
+  #                  mean = sum(BF.med, na.rm = TRUE)/sum(Flow, na.rm = TRUE),
+  #                  sd = sd(BFI, na.rm = TRUE),
   #                  n = length(Flow))
-  BFI.sum <- ddply(hyd, .(reorder(mnt, montho(hyd$Date))), summarize, 
-                   mean = sum(BF.med, na.rm = TRUE)/sum(Flow, na.rm = TRUE), 
-                   sd = sd(BFI, na.rm = TRUE), 
-                   n = length(Flow))
-  names(BFI.sum)[names(BFI.sum) == 'reorder(mnt, montho(hyd$Date))'] <- 'mnt'
-  BFI.sum$se <- 1.96*BFI.sum$sd/sqrt(BFI.sum$n)
-  meanBFI <- sum(hyd$BF.med, na.rm = TRUE)/sum(hyd$Flow, na.rm = TRUE) #mean(hyd$BFI, na.rm = TRUE)
+  # names(BFI.sum)[names(BFI.sum) == 'reorder(mnt, montho(hyd$Date))'] <- 'mnt'
+  # BFI.sum$se <- 1.96*BFI.sum$sd/sqrt(BFI.sum$n)
   
-  p <- ggplot(BFI.sum, aes(x = mnt, y = mean, group=1)) +
+  
+  BFI.sum <- hyd %>%
+    mutate(myr=format(Date, "%b-%Y")) %>%
+    group_by(myr) %>%
+    summarize(meanQ=mean(Flow, na.rm = TRUE),
+              mean=mean(BF.med, na.rm = TRUE),
+              sd = sd(BF.med, na.rm = TRUE),
+              n = length(Flow)) %>%
+    mutate(mnt=str_sub(myr,end=-6)) %>%
+    group_by(mnt) %>%
+    summarise(meanQ=sum(meanQ*n, na.rm = TRUE)/n(),
+              mean=sum(mean*n, na.rm = TRUE)/n(),
+              sd=sum(sd*n, na.rm = TRUE)/n(),
+              n=sum(n, na.rm = TRUE)) %>%
+    mutate(BFI=mean/meanQ, se = 1.96*sd/sqrt(n)/meanQ)
+  
+  meanBFI <- sum(hyd$BF.med, na.rm = TRUE)/sum(hyd$Flow, na.rm = TRUE) #mean(hyd$BFI, na.rm = TRUE)
+  p <- ggplot(BFI.sum, aes(x = factor(mnt,levels=montha), y = BFI, group=1)) +
     theme_bw() +
     geom_point() +
     geom_hline(yintercept = meanBFI, size=1, linetype='dotted') +
-    annotate("text", x='Oct', y=meanBFI, label=paste0("annual BFI = ",round(meanBFI,2)), hjust=0,vjust=-1,size=4) +
+    annotate("text", x='Oct', y=meanBFI, label=paste0("long-term average BFI = ",round(meanBFI,2)), hjust=0,vjust=-1,size=4) +
     # geom_line(size=1,linetype='dotted') +
-    geom_errorbar(aes(ymin=mean-se,ymax=mean+se)) +
-    # geom_ribbon(aes(ymin=mean-se,ymax=mean+se),alpha=0.15) +
+    geom_errorbar(aes(ymin=BFI-se,ymax=BFI+se)) +
+    # geom_ribbon(aes(ymin=BFI-se,ymax=BFI+se),alpha=0.15) +
     labs(x=NULL,y = "Baseflow Index (BFI)", title=NULL)
   
   if(!is.null(title)) p <- p + ggtitle(title)
@@ -90,7 +106,7 @@ output$BF.mnt <- renderPlot({
       rng <- input$rng.bf_date_window
       sfx <- ''
       if(!is.null(rng)) sfx <- paste0(': ',substr(rng[1],1,4),'-',substr(rng[2],1,4))
-      baseflow_boxplot(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\nmonthly baseflow range',sfx),rng)
+      baseflow_boxplot(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\nmonthly baseflow distribution',sfx),rng)
     }
   )
 })
@@ -102,7 +118,7 @@ output$BFI.mnt <- renderPlot({
       rng <- input$rng.bf_date_window
       sfx <- ''
       if(!is.null(rng)) sfx <- paste0(': ',substr(rng[1],1,4),'-',substr(rng[2],1,4))
-      baseflow_BFI(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\nmonthly baseflow index (BFI)',sfx),rng)
+      baseflow_BFI(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\naverage-monthly baseflow index (BFI)',sfx),rng)
     }
   )
 })
@@ -148,7 +164,7 @@ output$info.mntbf <- renderUI({
     shiny::HTML(paste0(
       '<body>',
       paste0(
-        '<div><h4>Baseflow distribution summary:</h4></div>',
+        '<div><h4>Baseflow distribution summary (m³/s):</h4></div>',
         sta$label,';  ',strftime(DTb, "%b %Y"),' to ',strftime(DTe, "%b %Y"),' (',por+1,' days)</div>'
       ),
       '</body>'

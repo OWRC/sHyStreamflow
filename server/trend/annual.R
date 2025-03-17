@@ -5,11 +5,11 @@
 flow_summary_annual <- function(hyd,carea,k=NULL,title=NULL,relative=FALSE){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   hyd$yr <- as.numeric(format(hyd$Date, "%Y"))
-  unit <- 'm?/s'
+  unit <- ' m3/s'
   if(!is.null(carea)){
     hyd$BF.med <- hyd$BF.med * 31557.6/carea # mm/yr
     hyd$Flow <- hyd$Flow * 31557.6/carea # mm/yr
-    unit <- 'mm/yr'
+    unit <- ' mm/yr'
   }
   
   mQ <- mean(hyd$Flow, na.rm=TRUE)
@@ -56,7 +56,7 @@ flow_summary_annual <- function(hyd,carea,k=NULL,title=NULL,relative=FALSE){
     p <- p + geom_hline(yintercept = mQ, size=1, linetype='dotted') +
       annotate("text", x=min(hyd$yr), y=mQ, label=paste0("mean discharge = ",round(mQ,0),unit), hjust=0,vjust=-1,size=4) +
       geom_hline(yintercept = mBF, size=1, linetype='dotted') +
-      annotate("text", x=min(hyd$yr), y=mBF, label=paste0("mean baseflow discharge = ",round(mBF,0),unit), hjust=0,vjust=-1,size=4) +
+      annotate("text", x=min(hyd$yr), y=mBF, label=paste0("mean baseflow discharge = ",round(mBF,0),unit," (BFI: ",round(mBF/mQ,2),")"), hjust=0,vjust=-1,size=4) +
       labs(y = paste0("Discharge (",unit,")"), x=NULL)
   }else{
     p <- p + labs(y = paste0("discharge relative to mean (",unit,")"), x=NULL)

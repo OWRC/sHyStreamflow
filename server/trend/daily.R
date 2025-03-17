@@ -6,7 +6,7 @@
 flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean=FALSE){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   hyd$doy <- as.numeric(format(hyd$Date, "%j"))
-  unit <- 'm?/s'
+  unit <- 'm3/s'
   if(!is.null(carea)){
     hyd$BF.med <- hyd$BF.med * 31557.6/carea # mm/yr
     hyd$Flow <- hyd$Flow * 31557.6/carea # mm/yr    
@@ -59,7 +59,7 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
 #   
 #   if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
 #   
-#   unit <- 'm?/s'
+#   unit <- 'm3/s'
 #   if(!is.null(carea)){
 #     hyd$Flow <- hyd$Flow * 31557.6/carea # mm/yr    
 #     unit <- 'mm/yr'

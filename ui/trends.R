@@ -8,7 +8,7 @@ navbarMenu("Trends",
    tabPanel("monthly distributions",
             source(file.path("ui/trend", "monthly.R"), local = TRUE)$value
    ),   
-   tabPanel("monthly, baseflow",
+   tabPanel("monthly baseflow distributions",
             source(file.path("ui/trend", "monthly_bf.R"), local = TRUE)$value
    ),
    tabPanel("day-of-year",

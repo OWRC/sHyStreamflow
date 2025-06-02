@@ -108,7 +108,11 @@ qStaLoc <- function(dbc, staID){
 ## collect location info
 ###########################################################################################
 qStaInfo <- function(dbc,staID){
-  return(data.frame(qStaLoc(dbc,staID)))
+  n1 <- qStaLoc(dbc,staID)
+  if (is.null(n1$CNT)) return(NULL)
+  o1 <- data.frame(n1)
+  if (empty(o1)) showNotification(paste0("Error: station ",staID," not found in HYDAT database."))
+  return(o1)
 }
 qStaCarea <- function(dbc,staID){
   qSta <- dbGetQuery(dbc, paste0('select * from STATIONS where STATION_NUMBER = "',staID,'"'))

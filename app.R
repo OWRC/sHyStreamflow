@@ -12,7 +12,8 @@
 
 source("pkg/packages.R", local = TRUE)
 
-sta.id.test <- NULL # 149116 # -1118703211 # 731100015 # 731400017 # 731400010 # 731400011 # 149203 # 149203 # 731100016 # '149343' # '02EC009' # '149130' # 149118 # 2147456340 # 
+
+sta.id <- '02EC009' # 149116 # NULL # -1118703211 # 731100015 # 731400017 # 731400010 # 731400011 # 149203 # 149203 # 731100016 # '149343' # '149130' # 149118 # 2147456340 # 
 
 
 shinyApp(
@@ -21,7 +22,7 @@ shinyApp(
     tags$head(includeCSS("pkg/styles.css")),
     tags$head(tags$script(HTML(jscode.mup))),
     inlineCSS(appLoad),
-    
+
     # Loading message
     div(
       id = "loading-content",
@@ -58,7 +59,7 @@ shinyApp(
     
     ###################
     ### (hard-coded) Load station ID:
-    if(!is.null(sta.id.test)) collect_hydrograph(sta.id.test) # for testing
+    if(!is.null(sta.id)) collect_hydrograph(sta.id) # for hard-coded station selection
     hide('chk.yld')
     ### Load from URL:
     observe({
@@ -66,7 +67,7 @@ shinyApp(
       if (!is.null(query[['sID']])) {
         collect_hydrograph(query[['sID']])
       } else {
-        showNotification(paste0("Error: URL invalid."))
+        if(is.null(sta.id)) showNotification(paste0("Error: URL invalid."))
       }
     })
 

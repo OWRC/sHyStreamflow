@@ -37,7 +37,7 @@ output$mnt.qbox <- renderPlot({
       monthly_summary_box(sta$hyd,sta$carea,sta$label,rng)
     }
   )
-})
+}, res=ggres)
 
 
 
@@ -69,7 +69,7 @@ output$tab.mnt <- renderFormattable({
                        .groups = "keep") %>%     
       ungroup()%>%
       mutate(Month=month.abb[Month]) %>%
-      formattable()
+      formattable(digits=3)
   }
 })
 

@@ -20,4 +20,4 @@ output$gghydgrph <- renderPlot({
         ylab(gglabcms) + ggtitle(sta$label)
     }
   }
-})
+}, res=ggres)

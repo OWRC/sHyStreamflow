@@ -17,10 +17,10 @@ output$k.coef <- renderPlot({
     if(!is.na(input$k.val)) sta$k <- input$k.val
     recession_coef_plot(sta$hyd$Flow, sta$k, sta$label)
   })
-})
+}, res=ggres)
 
 output$m.coef <- renderPlot({
   isolate({
     recession_coef_plot_m(sta$hyd, sta$k, sta$label)
   })
-})
+}, res=ggres)

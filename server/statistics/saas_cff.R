@@ -25,8 +25,13 @@ output$saas.cff <- renderPlot({
       summarise(nevnt=n()) %>%
       mutate(mnt=month.abb[mnt]) %>%
       mutate(mnt=factor(mnt,levels=montha)) %>%
-      ggplot(aes(mnt,nevnt)) + theme_bw() + geom_bar(stat='identity') + scale_x_discrete(drop=FALSE) + labs(x="timing (month)",y="count")
+      ggplot(aes(mnt,nevnt)) + 
+        theme_bw() + 
+        theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+        geom_bar(stat='identity') + 
+        scale_x_discrete(drop=FALSE) + 
+        labs(x="timing (month)",y="count")
   
-    grid.arrange(p1, p2, p3, nrow = 1, top=sta$label)
+    grid.arrange(p1, p2, p3, nrow = 1, top=grid::textGrob(paste0(sta$label,', channel forming flow'), x = 0, hjust = 0))
   }
-})
+}, res=ggres)

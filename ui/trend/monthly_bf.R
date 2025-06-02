@@ -9,7 +9,7 @@ fluidPage(
       shiny::includeMarkdown("md/dtrng.md")
     ),
     mainPanel(
-      shiny::includeMarkdown("md/bfmntnotes.md"), 
+      shiny::includeMarkdown("md/bfmntnotes.md"), br(), 
       column(6, plotOutput('BF.mnt')),
       column(6, plotOutput('BFI.mnt')), br(),
       shiny::includeMarkdown("md/rightclick.md"),br(),

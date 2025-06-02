@@ -42,10 +42,10 @@ output$fdc <- renderPlot({
   if (!is.null(sta.fdc$prtl)){
     flow_duration_curve(sta.fdc$cmplt,sta.fdc$prtl)
   }
-})
+}, res=ggres)
 
 output$mnt.q <- renderPlot({
   if (!is.null(sta.mnt$prtl)){
     flow_monthly_bar(sta.mnt$cmplt,sta.mnt$prtl)
   }
-})
+}, res=ggres)

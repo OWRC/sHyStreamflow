@@ -69,7 +69,7 @@ output$pk.q <- renderPlot({
       withProgress(message = 'rendering plots..', value = 0.1, {peak_flow_frequency(sta$hyd, mdl, nrsm, ci, paste0(sta$label,'\npeak flow frequency'))})
     }
   })
-})
+}, res=ggres)
 
 output$pk.dist <- renderPlot({
   isolate(
@@ -77,7 +77,7 @@ output$pk.dist <- renderPlot({
       withProgress(message = 'rendering extreme distribution..', value = 0.5, {peak_flow_density(sta$hyd, paste0(sta$label,'\ndistribution of annual extreme values'))})
     }
   )
-})
+}, res=ggres)
 
 output$pk.hist <- renderPlot({
   isolate(
@@ -85,4 +85,4 @@ output$pk.hist <- renderPlot({
       withProgress(message = 'rendering seasonal distribution..', value = 0.8, {peak_flow_histogram(sta$hyd, paste0(sta$label,'\nseasonal distribution of annual extremes'))})
     }
   )
-})
+}, res=ggres)

@@ -24,6 +24,8 @@ fluidPage(
                              
                              h3("Baseflow"),
                              shiny::includeMarkdown("md/saas_mmbf.md"), br(),
+                             h4("Boxplot"),
+                             shiny::includeMarkdown("md/boxplot-info.md"), br(),
                              plotOutput('saas.mmbf'), br(),
                              plotOutput('saas.mmbf2'),
                              formattableOutput('tabSAAS.mmbf'), hr(), br(),
@@ -43,15 +45,15 @@ fluidPage(
                              
                              h3("Riparian flow"),
                              p("Magnitude, duration (days) and timing (month) of flows with recurrence intervals of 2, 10, and 20 years."),
-                             h4("2 year recurrence"),
+                             br(), # h4("2 year recurrence"),
                              plotOutput('saas.rf.2'),
-                             h4("10 year recurrence"),
+                             br(), # h4("10 year recurrence"),
                              plotOutput('saas.rf.10'),
-                             h4("20 year recurrence"),
+                             br(), # h4("20 year recurrence"),
                              plotOutput('saas.rf.20'), hr(), br(),
                              
                              h3("Rate of change of flow"),
-                             p("Monthly median rate-of-change of flow (m3/sec/hr) for rising and falling limbs of flow events."),
+                             p("Monthly median rate-of-change of flow (m³/sec/hr) for rising and falling limbs of flow events."),
                              plotOutput('saas.roc')
                              
                            )

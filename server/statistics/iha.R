@@ -190,7 +190,7 @@ output$cumu.iah <- renderPlot({
       }
     )
   }
-})
+}, res=ggres)
 
 output$rng.iah1 <- renderDygraph({
   if (!is.null(sta$hyd)){

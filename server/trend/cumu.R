@@ -83,7 +83,7 @@ output$cum.q <- renderPlot({
       )
     }
   })
-})
+}, res=ggres)
 
 output$cum.bf <- renderPlot({
   input$mouseup
@@ -100,7 +100,7 @@ output$cum.bf <- renderPlot({
       )
     }
   })
-})
+}, res=ggres)
 
 output$rng.cd <- renderDygraph({
   if (!is.null(sta$hyd)){

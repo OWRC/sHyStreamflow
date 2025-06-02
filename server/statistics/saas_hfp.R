@@ -33,7 +33,7 @@ output$saas.hfp <- renderPlot({
       ggplot(aes(mnt,med.f)) + 
         theme_bw() +
         geom_bar(stat = 'identity') +
-        labs(x=NULL, y="median frequency of flow events less than bankfull flow") +
+        labs(x=NULL, y="median frequency of flow events\nless than bankfull flow") +
         scale_y_continuous(breaks = integer_breaks())
     
     p2 <- evnts %>%
@@ -45,9 +45,9 @@ output$saas.hfp <- renderPlot({
       ggplot(aes(mnt,med.d)) + 
         theme_bw() +
         geom_bar(stat = 'identity') +
-        labs(x=NULL, y="median duration (days) of flow events less than bankfull flow") +
+        labs(x=NULL, y="median duration (days) of flow events\nless than bankfull flow") +
         scale_y_continuous(breaks = integer_breaks())
       
-    grid.arrange(p1, p2, nrow = 1, top=sta$label)
+    grid.arrange(p1, p2, nrow = 1, top=grid::textGrob(sta$label, x = 0, hjust = 0))
   }
-})
+}, res=ggres)

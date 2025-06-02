@@ -3,6 +3,19 @@
 ########################################################
 # annual-average daily discharge
 ########################################################
+flow_summary_daily.df <- function(hyd, window=5){
+  hyd$dQ <- rollapply(hyd$Flow,window,mean,align='center',partial=TRUE)
+  hyd$dBF <- rollapply(hyd$BF.med,window,mean,align='center',partial=TRUE)
+  dQ <- aggregate(dQ ~ doy, hyd, mean)[,2]
+  dQn <- aggregate(dQ ~ doy, hyd, min)[,2]
+  dQx <- aggregate(dQ ~ doy, hyd, max)[,2]
+  dBF <- aggregate(dBF ~ doy, hyd, mean)[,2]
+  df <- data.frame(doy=seq(1,366),dQ,dQn,dQx,dBF) %>%
+    mutate(doy = ifelse(doy>365-92,doy-365,doy))
+  df$doy <- as.Date(df$doy - 1, origin = "2008-01-01")
+  return(df)
+}
+
 flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean=FALSE){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   hyd$doy <- as.numeric(format(hyd$Date, "%j"))
@@ -15,39 +28,34 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
   
   if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
   
-  hyd$dQ <- rollapply(hyd$Flow,5,mean,align='center',partial=TRUE)
-  hyd$dBF <- rollapply(hyd$BF.med,5,mean,align='center',partial=TRUE)
-  dQ <- aggregate(dQ ~ doy, hyd, mean)[,2]
-  dQn <- aggregate(dQ ~ doy, hyd, min)[,2]
-  dQx <- aggregate(dQ ~ doy, hyd, max)[,2]
-  dBF <- aggregate(dBF ~ doy, hyd, mean)[,2]
-  df <- data.frame(doy=seq(1,366),dQ,dQn,dQx,dBF) %>%
-    mutate(doy = ifelse(doy>365-92,doy-365,doy))
-  df$doy <- as.Date(df$doy - 1, origin = "2008-01-01")
+  df <- flow_summary_daily.df(hyd)
   
   if (minmaxmean) {
     plotnam = "Range of observed mean-daily discharge"
     p <- ggplot(df,aes(doy)) +
-      theme_bw() + theme(legend.position=c(0.03,0.8), legend.justification=c(0,0), legend.title=element_blank(),
+      theme_bw() + theme(legend.position=c(0.03,0.97), legend.justification=c(0,1), legend.title=element_blank(),
                          legend.background = element_rect(fill=alpha('white', 0.4))) +
       geom_line(aes(y=dQ, linetype="mean")) + 
       geom_line(aes(y=dQn, linetype="min")) +
       geom_line(aes(y=dQx, linetype="max")) +
       scale_linetype_manual(values=c("min" = "dashed", "mean"="solid", "max" = "dashed")) +
       scale_x_date(date_labels="%b", date_breaks = 'month') +
-      labs(y = paste0("Discharge (",unit,")"), x='Day of year')    
+      # labs(y = paste0("Discharge (",unit,")"), x='Day of year')
+      labs(y = paste0("(",unit,")"), x='Day of year')
   } else {
     plotnam = "Julian-day mean of mean-daily discharge"
     p <- ggplot(df,aes(doy)) +
-      theme_bw() + theme(legend.position=c(0.03,0.03), legend.justification=c(0,0), legend.title=element_blank(),
+      theme_bw() + theme(legend.position=c(0.03,0.97), legend.justification=c(0,1), legend.title=element_blank(),
                          legend.background = element_rect(fill=alpha('white', 0.4))) +
       geom_area(aes(y=dQ,fill='Total Flow')) + geom_area(aes(y=dBF,fill='Baseflow')) +
       scale_fill_manual(values=c("Total Flow" = "#ef8a62", "Baseflow" = "#43a2ca"), guide=guide_legend(reverse=T)) +
       scale_x_date(date_labels="%b", date_breaks = 'month') +
-      labs(y = paste0("Discharge (",unit,")"), x='Day of year')    
+      # labs(y = paste0("Discharge (",unit,")"), x='Day of year')
+      labs(y = paste0("(",unit,")"), x='Day of year')
   }
   
-  if(!is.null(carea)) p <- p + scale_y_continuous(sec.axis = sec_axis( trans=~.*carea/31557.6, name=gglabcms) )
+  # if(!is.null(carea)) p <- p + scale_y_continuous(sec.axis = sec_axis( trans=~.*carea/31557.6, name=gglabcms) )
+  if(!is.null(carea)) p <- p + scale_y_continuous(sec.axis = sec_axis( trans=~.*carea/31557.6, name='(m³/s)') )
   
   if(!is.null(title)) p <- p + ggtitle(paste0(plotnam,"\n",title))
   
@@ -93,7 +101,7 @@ output$dy.q <- renderPlot({
       flow_summary_daily(sta$hyd,sta$carea,sta$k,sta$label,rng)
     }
   )
-})
+}, res=ggres)
 
 output$dy.qmmm <- renderPlot({
   input$mouseup
@@ -103,7 +111,7 @@ output$dy.qmmm <- renderPlot({
       flow_summary_daily(sta$hyd,sta$carea,sta$k,sta$label,rng,minmaxmean=TRUE)
     }
   )
-})
+}, res=ggres)
 
 # output$dy.qbox <- renderPlot({
 #   input$mouseup
@@ -125,3 +133,23 @@ output$rng.mdd <- renderDygraph({
       dyRangeSelector(strokeColor = '', height=80)
   }
 })
+
+
+output$mdd.tabCsv <- downloadHandler(
+  filename <- function() { paste0(sta$name, '-dayofyear.csv') },
+  content <- function(file) {
+    if (!is.null(sta$hyd)){
+      hyd <- sta$hyd
+      if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,sta$carea,sta$k)}
+      hyd$doy <- as.numeric(format(hyd$Date, "%j"))
+      if(!is.null(sta$carea)){
+        hyd$BF.med <- hyd$BF.med * 31557.6/sta$carea # mm/yr
+        hyd$Flow <- hyd$Flow * 31557.6/sta$carea # mm/yr
+      }
+      dat.out <- flow_summary_daily.df(hyd) %>%
+        mutate(doy=yday(doy)) %>%
+        dplyr::rename("JulianDay"=doy, "min streamflow"=dQn, "max streamflow"=dQx, "mean streamflow"=dQ, "mean baseflow"=dBF)
+      write.csv(dat.out, file, row.names = FALSE)
+    }
+  }
+)

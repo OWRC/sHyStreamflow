@@ -2,6 +2,22 @@
 ########################################################
 # annual flow summary
 ########################################################
+flow_summary_annual.df <- function(hyd) {
+  # NEW
+  # summarize by year
+  dfm35 <- df.annual.simple(hyd)
+  df <- hyd %>%
+    mutate(year = year(Date)) %>%
+    group_by(year) %>%
+    dplyr::summarise(mf = mean(Flow, na.rm = TRUE), mb = mean(BF.med, na.rm = TRUE), n = sum(!is.na(Flow)))
+  
+  df <- merge(x = df, y = dfm35, by = "year", all.x = TRUE)
+  df$wmo <- df$wmo>=1
+  df$wmoc <- ''
+  df$wmoc[!df$wmo] = 'black'
+  return(df)
+}
+
 flow_summary_annual <- function(hyd,carea,k=NULL,title=NULL,relative=FALSE){
   if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
   hyd$yr <- as.numeric(format(hyd$Date, "%Y"))
@@ -18,20 +34,9 @@ flow_summary_annual <- function(hyd,carea,k=NULL,title=NULL,relative=FALSE){
   if(relative){
     hyd$Flow <- hyd$Flow - mQ
     hyd$BF.med <- hyd$BF.med - mBF
-  }  
+  }
   
-  # NEW
-  # summarize by year
-  dfm35 <- df.annual.simple(hyd)
-  df <- hyd %>%
-    mutate(year = year(Date)) %>%
-    group_by(year) %>%
-    dplyr::summarise(mf = mean(Flow, na.rm = TRUE), mb = mean(BF.med, na.rm = TRUE), n = sum(!is.na(Flow)))
-
-  df <- merge(x = df, y = dfm35, by = "year", all.x = TRUE)
-  df$wmo <- df$wmo>=1
-  df$wmoc <- ''
-  df$wmoc[!df$wmo] = 'black'
+  df <- flow_summary_annual.df(hyd)
 
   p <- ggplot(df, aes(year)) +
     theme_bw() + theme(legend.position=c(0.01,0.01), legend.justification=c(0,0), legend.title=element_blank(), 
@@ -75,11 +80,28 @@ output$yr.q <- renderPlot({isolate({
   if (!is.null(sta$hyd)){
     flow_summary_annual(sta$hyd,sta$carea,sta$k,sta$label)
   }
-})})
+})}, res=ggres)
 
 output$yr.q.rel <- renderPlot({isolate({
   if (!sta$BFbuilt) separateHydrograph()
   if (!is.null(sta$hyd)){
     flow_summary_annual(sta$hyd,sta$carea,sta$k,sta$label,TRUE)
   }
-})})
+})}, res=ggres)
+
+output$yr.tabCsv <- downloadHandler(
+  filename <- function() { paste0(sta$name, '-annual.csv') },
+  content <- function(file) {
+    if (!is.null(sta$hyd)){
+      hyd <- sta$hyd
+      if(!is.null(sta$carea)){
+        hyd$BF.med <- hyd$BF.med * 31557.6/sta$carea # mm/yr
+        hyd$Flow <- hyd$Flow * 31557.6/sta$carea # mm/yr
+      }
+      dat.out <- flow_summary_annual.df(hyd) %>%
+        dplyr::select(c(year,mf,mb,n,wmo)) %>%
+        dplyr::rename("mean flow"=mf, "mean baseflow"=mb)
+      write.csv(dat.out, file, row.names = FALSE)
+    }
+  }
+)

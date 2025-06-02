@@ -1,5 +1,4 @@
 
-inclEV <- TRUE
 
 output$hydgrph.prse <- renderDygraph({isolate(
   if (!is.null(sta$hyd)){
@@ -9,7 +8,7 @@ output$hydgrph.prse <- renderDygraph({isolate(
       if( is.null(sta$hyd$evnt) ){sta$hyd <- discretize_hydrograph(sta$hyd, sta$carea, sta$k)}
     })
     withProgress(message = 'rendering plot..', value = 0.1, {
-      flow_hydrograph_parsed(sta$hyd,inclEV)
+      flow_hydrograph_parsed(sta$hyd,TRUE)
     })
   }
 )})
@@ -19,7 +18,7 @@ output$hydgrph.prse <- renderDygraph({isolate(
 output$hydgrph.prse.scatter <- renderPlot({
   if (!is.null(sta$hyd$qtyp)){
     sta$hyd %>%
-      mutate(new = ifelse(inclEV && evnt > 0, 1, 0)) %>%
+      mutate(new = ifelse(evnt > 0, 1, 0)) %>%
       mutate(new2 = cumsum(new)) %>%
       group_by(new2) %>%
       mutate(pevnt=sum(Rf+Sm, na.rm = TRUE)) %>%
@@ -29,7 +28,7 @@ output$hydgrph.prse.scatter <- renderPlot({
         theme_bw() + 
         geom_abline(slope=1,intercept=0, alpha=.5, linetype='dashed') +
         geom_point() + 
-        labs(x="Atmospheric yield", y="Event (discharge) yield")
+        labs(title=sta$label,x="Atmospheric yield (mm)", y="Event (discharge) yield (mm)") +
         coord_fixed()
   }
-})
+}, res=ggres)

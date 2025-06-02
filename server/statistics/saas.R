@@ -69,7 +69,7 @@ output$saas.mmbf <- renderPlot({
         geom_boxplot(aes(x = reorder(mnt, montho(Date)), y = BF.med), size = 1) + #, outlier.shape = NA)
         labs(title = sta$label, y="Monthly median baseflow magnitude (m³/s)",x=NULL)
   }
-})
+}, res=ggres)
 
 output$saas.mmbf2 <- renderPlot({
   req(rng <- input$rng.saas_date_window)
@@ -79,8 +79,8 @@ output$saas.mmbf2 <- renderPlot({
       # fct_reorder(Month, montha) %>%
       ggplot(aes(x=Month, group = 1)) +
       theme_bw() +
-      theme(legend.position = c(.05,.95),
-            legend.justification = c(0,1)) +
+      # theme(legend.position = c(.05,.95),
+      #       legend.justification = c(0,1)) +
       geom_line(aes(y=p875, linetype='87.5%')) +
       geom_line(aes(y=p625, linetype='62.5%')) + #, linetype='dashed') +
       geom_line(aes(y=median, linetype='50%'), linewidth=1) +
@@ -89,7 +89,7 @@ output$saas.mmbf2 <- renderPlot({
       scale_linetype_manual(name= "exceedance", values = c('solid','dashed','solid','dashed','solid')) +
       labs(title = sta$label, y="Monthly exceedances of baseflow (m³/s)", x="Month")
   }
-})
+}, res=ggres)
 
 output$saas.m95q <- renderPlot({
   req(rng <- input$rng.saas_date_window)
@@ -99,17 +99,17 @@ output$saas.m95q <- renderPlot({
       # fct_reorder(Month, montha) %>%
       ggplot(aes(x=Month, group = 1)) +
       theme_bw() +
-      theme(legend.position = c(.05,.95),
-            legend.justification = c(0,1)) +
+      # theme(legend.position = c(.05,.95),
+      #       legend.justification = c(0,1)) +
       geom_line(aes(y=p875, linetype='87.5%')) +
       geom_line(aes(y=p625, linetype='62.5%')) + #, linetype='dashed') +
       geom_line(aes(y=median, linetype='50%'), linewidth=1) +
       geom_line(aes(y=p375, linetype='37.5%')) + #, linetype='dashed') +
       geom_line(aes(y=p125, linetype='12.5%')) +
       scale_linetype_manual(name= "exceedance", values = c('solid','dashed','solid','dashed','solid')) +
-      labs(title = sta$label, y="Monthly exceedances of total streamflow magnitude (m³/s)")
+      labs(title = sta$label, y="Monthly exceedances of\ntotal streamflow magnitude (m³/s)")
   }
-})
+}, res=ggres)
 
 
 ######################
@@ -117,13 +117,13 @@ output$saas.m95q <- renderPlot({
 ######################
 output$tabSAAS.mmbf <- renderFormattable({
   req(rng <- input$rng.saas_date_window)
-  saas.stat.bf(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],]) %>% formattable()
+  saas.stat.bf(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],]) %>% formattable(digits=3)
   # saas.stat.bf(sta$hyd) %>% formattable()
 })
 
 output$tabSAAS.m95q <- renderFormattable({
   req(rng <- input$rng.saas_date_window)
-  saas.stat(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],]) %>% formattable()
+  saas.stat(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],]) %>% formattable(digits=3)
   # saas.stat(sta$hyd) %>% formattable()
 })
 

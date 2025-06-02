@@ -1,5 +1,5 @@
 
-sass.rf.plot <- function(hyd, qp) {
+sass.rf.plot <- function(hyd, qp, subtitle) {
   evnts <- hyd %>%  
     dplyr::select(c('Date','Flow','evnt')) %>%
     mutate(new = ifelse(evnt > 0, 1, 0)) %>%
@@ -18,9 +18,14 @@ sass.rf.plot <- function(hyd, qp) {
     summarise(nevnt=n()) %>%
     mutate(mnt=month.abb[mnt]) %>%
     mutate(mnt=factor(mnt,levels=montha)) %>%
-    ggplot(aes(mnt,nevnt)) + theme_bw() + geom_bar(stat='identity') + scale_x_discrete(drop=FALSE) + labs(x="timing (month)",y="count")
+    ggplot(aes(mnt,nevnt)) + 
+      theme_bw() + 
+      theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+      geom_bar(stat='identity') + 
+      scale_x_discrete(drop=FALSE) + 
+      labs(x="timing (month)",y="count")
   
-  grid.arrange(p1, p2, p3, nrow = 1, top=sta$label)  
+  grid.arrange(p1, p2, p3, nrow = 1, top=grid::textGrob(paste0(sta$label,', ',subtitle), x = 0, hjust = 0))  
 }
 
 
@@ -28,16 +33,16 @@ output$saas.rf.2 <- renderPlot({
   req(rng <- input$rng.saas_date_window)
   if (!is.null(sta$hyd)){
     qp <- returnQ(sta$hyd, 2)
-    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp)
+    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp, '2 year recurrence')
   }
-})
+}, res=ggres)
 
 
 output$saas.rf.10 <- renderPlot({
   req(rng <- input$rng.saas_date_window)
   if (!is.null(sta$hyd)){
     qp <- returnQ(sta$hyd, 10)
-    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp)
+    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp, '10 year recurrence')
     # evnts <- sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],] # %>%  
     #   dplyr::select(c('Date','Flow','evnt')) %>%
     #   mutate(new = ifelse(evnt > 0, 1, 0)) %>%
@@ -60,14 +65,14 @@ output$saas.rf.10 <- renderPlot({
     # 
     # grid.arrange(p1, p2, p3, nrow = 1, top=sta$label)
   }
-})
+}, res=ggres)
 
 
 output$saas.rf.20 <- renderPlot({
   req(rng <- input$rng.saas_date_window)
   if (!is.null(sta$hyd)){
     qp <- returnQ(sta$hyd, 20)
-    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp)
+    sass.rf.plot(sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],], qp, '20 year recurrence')
     # evnts <- sta$hyd[sta$hyd$Date >= rng[1] & sta$hyd$Date <= rng[2],] %>%  
     #   dplyr::select(c('Date','Flow','evnt')) %>%
     #   mutate(new = ifelse(evnt > 0, 1, 0)) %>%
@@ -90,4 +95,4 @@ output$saas.rf.20 <- renderPlot({
     # 
     # grid.arrange(p1, p2, p3, nrow = 1, top=sta$label)
   }
-})
+}, res=ggres)

@@ -1,2 +1,2 @@
 
-Boxpots follow the method of McGill et.al. (1978): box represents the 25% to 75% quantile, while the centre line represents median (50% quantile). Whiskers represent the observation less than or equal to the box extents ±1.5 * IQR (inter-quartile range).
+The lower and upper hinges correspond to the first and third quartiles (the 25th and 75th percentiles). The upper whisker extends from the hinge to the largest value no further than 1.5 * IQR from the hinge (where IQR is the inter-quartile range, or distance between the first and third quartiles). The lower whisker extends from the hinge to the smallest value at most 1.5 * IQR of the hinge. Data beyond the end of the whiskers are called "outlying" points and are plotted individually.

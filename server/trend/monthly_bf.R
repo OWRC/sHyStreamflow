@@ -109,7 +109,7 @@ output$BF.mnt <- renderPlot({
       baseflow_boxplot(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\nmonthly baseflow distribution',sfx),rng)
     }
   )
-})
+}, res=ggres)
 
 output$BFI.mnt <- renderPlot({
   input$mouseup
@@ -121,7 +121,7 @@ output$BFI.mnt <- renderPlot({
       baseflow_BFI(sta$hyd,sta$carea,sta$k,paste0(sta$label,'\naverage-monthly baseflow index (BFI)',sfx),rng)
     }
   )
-})
+}, res=ggres)
 
 output$rng.bf <- renderDygraph({
   if (!is.null(sta$hyd)){
@@ -151,7 +151,7 @@ output$tab.mntbf <- renderFormattable({
                        .groups = "keep") %>%     
       ungroup()%>%
       mutate(Month=month.abb[Month]) %>%
-      formattable()
+      formattable(digits=3)
   }
 })
 

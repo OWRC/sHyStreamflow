@@ -38,7 +38,7 @@ output$se.q <- renderPlot({
       ggtitle(paste0(sta$label,'\nmean annual discharge by season')) + 
       ylab(ylab) + xlab('water year (oct-sept)')
   }
-})
+}, res=ggres)
 
 
 

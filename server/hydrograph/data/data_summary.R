@@ -42,7 +42,7 @@ output$dat.sum.tbl <- renderFormattable({
       p95 <- df %>% summarise_each(funs(quantile(.,.95, na.rm = TRUE)))
       as.data.frame(t(rbind(mn, md, p5, p16, p84, p95))) %>% 
         dplyr::rename("mean"=V1, "median"=V2,"p5"=V3,"p16"=V4,"p84"=V5,"p95"=V6) %>% 
-        formattable()
+        formattable(digits=3)
     } else {
       "best to have all computed.."
     }

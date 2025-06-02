@@ -43,7 +43,7 @@ output$mam.q1 <- renderPlot({
       withProgress(message = 'rendering plot 1 of 3..', value = 0.1, {mam_frequency(sta$hyd, mdl, 1, nrsm, ci, paste0(sta$label,'\nannual extreme minimum (1-day MAM)'))})
     }
   })
-})
+}, res=ggres)
 
 output$mam.q7 <- renderPlot({
   input$mam.regen
@@ -55,7 +55,7 @@ output$mam.q7 <- renderPlot({
       withProgress(message = 'rendering plot 2 of 3..', value = 0.5, {mam_frequency(sta$hyd, mdl, 7, nrsm, ci, paste0(sta$label,'\n7-day MAM'))})
     }
   })
-})
+}, res=ggres)
 
 output$mam.q30 <- renderPlot({
   input$mam.regen
@@ -67,7 +67,7 @@ output$mam.q30 <- renderPlot({
       withProgress(message = 'rendering plot 3 of 3..', value = 0.8, {mam_frequency(sta$hyd, mdl, 30, nrsm, ci, paste0(sta$label,'\n30-day MAM'))})
     }
   })
-})
+}, res=ggres)
 
 output$hist.q1 <- renderPlot({
   isolate({
@@ -84,7 +84,7 @@ output$hist.q1 <- renderPlot({
         labs(x=NULL, title=paste0(sta$label,'\noccurrence of annual extreme minima'))
     }
   })
-})
+}, res=ggres)
 
 output$hist.q7 <- renderPlot({
   isolate({
@@ -101,7 +101,7 @@ output$hist.q7 <- renderPlot({
         labs(x=NULL, title=paste0(sta$label,'\ndistribution of 7-day MAM occurrence'))
     }
   })
-})
+}, res=ggres)
 
 output$hist.q30 <- renderPlot({
   isolate({
@@ -118,4 +118,4 @@ output$hist.q30 <- renderPlot({
         labs(x=NULL, title=paste0(sta$label,'\ndistribution of 30-day MAM occurrence'))
     }
   })
-})
+}, res=ggres)

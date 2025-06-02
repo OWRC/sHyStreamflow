@@ -30,7 +30,7 @@ output$saas.roc <- renderPlot({
         theme_bw() + 
         geom_bar(aes(fill=Limb), stat='identity', position = "dodge") + 
         scale_x_discrete(drop=FALSE) +  
-        labs(title=sta$label,x=NULL,y="median rate-of-change of flow (m3 sec-1 hr-1)")
+        labs(title=sta$label,x=NULL,y="median rate-of-change of flow\n(m³/sec/hr)")
     
   }
-})
+}, res=ggres)

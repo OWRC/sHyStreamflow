@@ -3,7 +3,7 @@
 output$dyhydgrph <- renderDygraph({
   wflg <- input$chk.flg
   req(rng <- r$rngselect+1)
-  print(rng)
+  # print(rng)
   if (!is.null(sta$hyd) && rng[[1]]!=rng[[2]]){
     if(!wflg){
       if ("Tx" %in% colnames(sta$hyd)){

@@ -9,6 +9,7 @@ fluidPage(
      br(), downloadButton("mdd.tabCsv", "Download as csv..")
     ),
     mainPanel(
+     shiny::includeMarkdown("md/doy.md"),
      plotOutput('dy.q'),
      plotOutput('dy.qmmm'),
      # plotOutput('dy.qbox'),

@@ -19,13 +19,14 @@ flow_summary_annual.df <- function(hyd) {
 }
 
 flow_summary_annual <- function(hyd,carea,k=NULL,title=NULL,relative=FALSE){
-  if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  # if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  if (!sta$BFbuilt) separateHydrograph()
   hyd$yr <- as.numeric(format(hyd$Date, "%Y"))
   unit <- ' m3/s'
   if(!is.null(carea)){
     hyd$BF.med <- hyd$BF.med * 31557.6/carea # mm/yr
     hyd$Flow <- hyd$Flow * 31557.6/carea # mm/yr
-    unit <- ' mm/yr'
+    unit <- 'mm/yr'
   }
   
   mQ <- mean(hyd$Flow, na.rm=TRUE)

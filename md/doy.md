@@ -1,0 +1,2 @@
+#### Note:
+*Day-of-year hydrographs are expressed in mm/year to facilitate comparison across watersheds of different sizes. This normalized value represents the amount of annual runoff that would occur if the observed daily rate persisted throughout the entire year. Consequently, the average of the plotted values over the year corresponds to total annual runoff/baseflow.*

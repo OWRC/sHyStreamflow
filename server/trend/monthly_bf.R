@@ -3,7 +3,8 @@
 # Baseflow summary
 ########################################################
 baseflow_boxplot <- function(hyd,carea,k=NULL,title=NULL, DTrng=NULL){
-  if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  # if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  if (!sta$BFbuilt) separateHydrograph()
   hyd$mnt <- format(hyd$Date, "%b")
   hyd$mnt <- as.factor(hyd$mnt)
   unit <- 'm3/s'

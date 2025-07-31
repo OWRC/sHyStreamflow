@@ -17,7 +17,8 @@ flow_summary_daily.df <- function(hyd, window=5){
 }
 
 flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean=FALSE){
-  if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  # if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,carea,k)}
+  if (!sta$BFbuilt) separateHydrograph()
   hyd$doy <- as.numeric(format(hyd$Date, "%j"))
   unit <- 'm3/s'
   if(!is.null(carea)){
@@ -26,12 +27,16 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
     unit <- 'mm/yr'
   }
   
-  if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
+  title.sfx <- ''
+  if(!is.null(DTrng)) {
+    hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
+    title.sfx <- paste0(" (",year(DTrng[1])," - ",year(DTrng[2]),")")
+  }
   
   df <- flow_summary_daily.df(hyd)
   
   if (minmaxmean) {
-    plotnam = "Range of observed mean-daily discharge"
+    plotnam = paste0("Range of observed mean-daily discharge",title.sfx)
     p <- ggplot(df,aes(doy)) +
       theme_bw() + theme(legend.position=c(0.03,0.97), legend.justification=c(0,1), legend.title=element_blank(),
                          legend.background = element_rect(fill=alpha('white', 0.4))) +
@@ -41,9 +46,9 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
       scale_linetype_manual(values=c("min" = "dashed", "mean"="solid", "max" = "dashed")) +
       scale_x_date(date_labels="%b", date_breaks = 'month') +
       # labs(y = paste0("Discharge (",unit,")"), x='Day of year')
-      labs(y = paste0("(",unit,")"), x='Day of year')
+      labs(y = paste0("(",unit,")"), x=NULL) #'Day of year')
   } else {
-    plotnam = "Julian-day mean of mean-daily discharge"
+    plotnam = paste0("Julian-day mean of mean-daily discharge",title.sfx)
     p <- ggplot(df,aes(doy)) +
       theme_bw() + theme(legend.position=c(0.03,0.97), legend.justification=c(0,1), legend.title=element_blank(),
                          legend.background = element_rect(fill=alpha('white', 0.4))) +
@@ -51,13 +56,17 @@ flow_summary_daily <- function(hyd,carea,k=NULL,title=NULL,DTrng=NULL,minmaxmean
       scale_fill_manual(values=c("Total Flow" = "#ef8a62", "Baseflow" = "#43a2ca"), guide=guide_legend(reverse=T)) +
       scale_x_date(date_labels="%b", date_breaks = 'month') +
       # labs(y = paste0("Discharge (",unit,")"), x='Day of year')
-      labs(y = paste0("(",unit,")"), x='Day of year')
+      labs(y = paste0("(",unit,")"), x=NULL) #'Day of year')
   }
   
   # if(!is.null(carea)) p <- p + scale_y_continuous(sec.axis = sec_axis( trans=~.*carea/31557.6, name=gglabcms) )
   if(!is.null(carea)) p <- p + scale_y_continuous(sec.axis = sec_axis( trans=~.*carea/31557.6, name='(m³/s)') )
   
-  if(!is.null(title)) p <- p + ggtitle(paste0(plotnam,"\n",title))
+  if(!is.null(title)) {
+    p <- p + labs(title=plotnam,subtitle=title) #ggtitle(paste0(plotnam,"\n",title))
+  } else {
+    p <- p + ggtitle(plotnam)
+  }
   
   return(p)  
 }
@@ -140,6 +149,8 @@ output$mdd.tabCsv <- downloadHandler(
   content <- function(file) {
     if (!is.null(sta$hyd)){
       hyd <- sta$hyd
+      DTrng <- isolate(input$rng.mdd_date_window)
+      if(!is.null(DTrng)) hyd <- hyd[hyd$Date >= DTrng[1] & hyd$Date <= DTrng[2],]
       if (!"BF.med" %in% colnames(hyd)){hyd <- baseflow_range(hyd,sta$carea,sta$k)}
       hyd$doy <- as.numeric(format(hyd$Date, "%j"))
       if(!is.null(sta$carea)){

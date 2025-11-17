@@ -1,5 +1,5 @@
 # **sHydrology**
-#### *A Shiny-Leaflet interface to a stream flow database.*
+> *A Shiny-Leaflet interface to a stream flow database.*
 
 #### Current functionality:
  * Select gauge from a map
@@ -17,6 +17,15 @@
  * In-stream flow regime analysis
  * Trend analysis
  * View data as a table, and export data as *.csv 
+
+## Data Sources
+
+- [Near realtime Climate Data Service](https://owrc.github.io/interpolants/sources/climate-data-service.html)
+- [Contributing Area calculation](https://owrc.github.io/interpolants/interpolation/overland.html)
+
+asdf
+
+<br>
 
 ## Hydrograph analysis
 ### Automatic recession coefficient computation:

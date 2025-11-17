@@ -8,7 +8,7 @@
  * Dynamic hydrograph zooming:
 	 * drag-and-click zoom
 	 * double-click to full extent
-	 * optionnally use date picker
+	 * optionally use date picker
  * Execute a suite of hydrograph separation algorithms (14 in total, see below)
 	 * display min/max range (blue band) and median separated baseflow (dotted line)
  * Hydrograph dis-aggregation
@@ -20,10 +20,12 @@
 
 ## Data Sources
 
-- [Near realtime Climate Data Service](https://owrc.github.io/interpolants/sources/climate-data-service.html)
-- [Contributing Area calculation](https://owrc.github.io/interpolants/interpolation/overland.html)
+### Climate Data
 
-asdf
+
+- Interpolated climate data: [Near realtime Climate Data Service](https://owrc.github.io/interpolants/sources/climate-data-service.html)
+- [Catchment area calculation](https://owrc.github.io/interpolants/interpolation/overland.html)
+
 
 <br>
 
@@ -39,20 +41,20 @@ The recession coefficient is required for many of the following hydrograph analy
 ### Hydrograph separation methods:
 "Baseflow" is separated from the hydrographs using 14 automatic procedures listed below. Standard baseflow model parameters (as documented in the literature) are also listed where applicable. The user may alter these parameters from the *settings: baseflow separation* window *(yet to be completed)*.
 
- 1.	**BF.LH:** The Lyne-Hollick digital filter (Lyne and Hollick, 1979), 3-pass sweep with \\(\alpha=0.925\\) as discussed in Chapman (1999);
- 2.	**BF.CM:** The Chapman-Maxwell digital filter (Chapman and Maxwell, 1996), using automatically computed recession coefficient (\\(k\\));
- 3.	**BF.BE:** The Boughton-Eckhardt digital filter (Boughton, 1993; Eckhardt, 2005) with computed \\(k\\) and \\(BFI_\text{max}=0.8\\);
- 4.	**BF.JH:** The Jakeman-Hornberger digital filter (Jakeman and Hornberger, 1993) based on their IHACRES model with \\(C=0.3\\) and \\(\alpha=-\exp(-1/k)\\);
- 5.	**BF.Cl:** The method of Clarifica Inc. (2002);
- 6.	**BF.UKn:** The UK Institute of Hydrology (or Wallingford) method (Institute of Hydrology, 1980), sweeping minimum of Piggott et.al. (2005);
- 7.	**BF.UKx:** The UK Institute of Hydrology/Wallingford method (Institute of Hydrology, 1980), sweeping maximum of Piggott et.al. (2005);
- 8.	**BF.UKm:** The UK Institute of Hydrology/Wallingford method (Institute of Hydrology, 1980), sweeping median;
- 9.	**BF.HYSEP.FI:** The HYSEP fixed-interval method (Sloto and Crouse, 1996), with known catchment area;
- 10.	**BF.HYSEP.SI:** The HYSEP sliding-interval method (Sloto and Crouse, 1996), with known catchment area;
- 11.	**BF.HYSEP.LM:** The HYSEP local minima method (Sloto and Crouse, 1996), with known catchment area;
- 12.	**BF.PART1:** The PART method (Rutledge, 1998), with known catchment area, pass 1 of 3 antecedent recession requirement;
- 13.	**BF.PART2:** The PART method (Rutledge, 1998), with known catchment area, pass 2 of 3 antecedent recession requirement;
- 14.	**BF.PART3:** The PART method (Rutledge, 1998), with known catchment area, pass 3 of 3 antecedent recession requirement.
+ 1. **BF.LH:** The Lyne-Hollick digital filter (Lyne and Hollick, 1979), 3-pass sweep with $(\alpha=0.925)$ as discussed in Chapman (1999);
+ 2. **BF.CM:** The Chapman-Maxwell digital filter (Chapman and Maxwell, 1996), using automatically computed recession coefficient $(k)$;
+ 3. **BF.BE:** The Boughton-Eckhardt digital filter (Boughton, 1993; Eckhardt, 2005) with computed $(k)$ and $(\text{BFI}_\text{max}=0.8)$;
+ 4. **BF.JH:** The Jakeman-Hornberger digital filter (Jakeman and Hornberger, 1993) based on their IHACRES model with $(C=0.3)$ and $(\alpha=-\exp(-1/k))$;
+ 5. **BF.Cl:** The method of Clarifica Inc. (2002);
+ 6. **BF.UKn:** The UK Institute of Hydrology (or Wallingford) method (Institute of Hydrology, 1980), sweeping minimum of Piggott et.al. (2005);
+ 7. **BF.UKx:** The UK Institute of Hydrology/Wallingford method (Institute of Hydrology, 1980), sweeping maximum of Piggott et.al. (2005);
+ 8. **BF.UKm:** The UK Institute of Hydrology/Wallingford method (Institute of Hydrology, 1980), sweeping median;
+ 9. **BF.HYSEP.FI:** The HYSEP fixed-interval method (Sloto and Crouse, 1996), with known catchment area;
+ 10. **BF.HYSEP.SI:** The HYSEP sliding-interval method (Sloto and Crouse, 1996), with known catchment area;
+ 11. **BF.HYSEP.LM:** The HYSEP local minima method (Sloto and Crouse, 1996), with known catchment area;
+ 12. **BF.PART1:** The PART method (Rutledge, 1998), with known catchment area, pass 1 of 3 antecedent recession requirement;
+ 13. **BF.PART2:** The PART method (Rutledge, 1998), with known catchment area, pass 2 of 3 antecedent recession requirement;
+ 14. **BF.PART3:** The PART method (Rutledge, 1998), with known catchment area, pass 3 of 3 antecedent recession requirement.
 
 On the *Long-term trend analysis: monthly baseflow* window, computed baseflow is summarized on a monthly basis in the form of box-whisker plots. The distribution plotted here is built from the median monthly baseflow computed for every month of record using each of the 14 separation methods listed below. Where applicable, the baseflow values have bee normalized by the stream gauge's catchment area thereby providing the values in equivalent mm/month, which can be used as a first-approximation to basin-averaged groundwater recharge.
 
